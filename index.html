@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hirose Dental | 歯科廣瀬醫院</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- フォント -->
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Noto+Serif+JP:wght@600;700;900&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --navy: #43516c;
+            --navy-dark: #2d3b55;
+            --green: #6bbea0;
+            --green-light: #e0f2ec;
+            --light: #f4f6f8;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+            color: var(--navy);
+            background-color: var(--light);
+            letter-spacing: 0.05em;
+            line-height: 1.8;
+        }
+
+        /* 見出し */
+        h2, h3, h4 {
+            font-family: 'Noto Serif JP', serif;
+            letter-spacing: 0.05em;
+        }
+
+        /* 英字（アクセント用） */
+        .font-en { font-family: 'Oswald', sans-serif; letter-spacing: 0.1em; text-transform: uppercase; }
+
+        .text-navy { color: var(--navy); }
+        .text-green { color: var(--green); }
+        .bg-navy { background-color: var(--navy); }
+        .bg-green { background-color: var(--green); }
+        .bg-light { background-color: var(--light); }
+        .bg-white { background-color: var(--white); }
+
+        /* コンテナ調整 */
+        .container-wide { max-width: 100%; padding: 0 2%; }
+        @media (min-width: 1024px) {
+            .container-wide { padding: 0 4%; }
+        }
+
+        /* 画像フィルター：ホバー時に「暗幕を弱めない（むしろ少し強める）」 */
+        .img-filter {
+            position: relative;
+            overflow: hidden;
+        }
+        .img-filter::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(67, 81, 108, 0.20), rgba(67, 81, 108, 0.45));
+            transition: all 0.35s ease;
+            pointer-events: none;
+        }
+        /* ✅ホバー時に透明化しない：白文字が飛ばないよう、暗幕を残す */
+        .group:hover .img-filter::after {
+            background: linear-gradient(to bottom, rgba(45, 59, 85, 0.25), rgba(45, 59, 85, 0.55));
+        }
+
+        .img-filter img {
+            transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .group:hover .img-filter img {
+            transform: scale(1.05);
+        }
+
+        /* スタイリッシュなボタン */
+        .btn-stylish {
+            display: inline-block;
+            padding: 1rem 3rem;
+            background: var(--navy);
+            color: var(--white);
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+            border: 1px solid var(--navy);
+        }
+        .btn-stylish:hover {
+            background: var(--green);
+            border-color: var(--green);
+            color: var(--white);
+        }
+
+        /* 縦書きテキスト */
+        .vertical-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+
+        /* 背景装飾 */
+        .bg-pattern {
+            background-image: radial-gradient(var(--green) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.15;
+        }
+
+        /* 文字の可読性を高めるシャドウ */
+        .text-shadow-sm { text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .text-shadow-md { text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+
+        /* ==============================
+           ✅ 診療案内カード（ホバー安定化）
+           ============================== */
+
+        /* 4枚のカードでホバー挙動を共通化 */
+        .medical-card {
+            border: 1px solid rgba(0,0,0,0.10);
+            background: var(--white);
+            transition: box-shadow .3s ease, transform .3s ease, border-color .3s ease;
+        }
+        .medical-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 24px 50px rgba(45, 59, 85, 0.18);
+            border-color: rgba(107, 190, 160, 0.55);
+        }
+
+        /* 下段（テキスト側）の切り替え：白く飛ばないよう統一 */
+        .medical-card .card-body {
+            background: var(--white);
+            transition: background-color .3s ease;
+        }
+        .medical-card:hover .card-body {
+            background: var(--navy);
+        }
+
+        /* テキスト色 */
+        .medical-card .card-title {
+            color: var(--navy);
+            transition: color .3s ease;
+        }
+        .medical-card:hover .card-title {
+            color: var(--white);
+        }
+        .medical-card .card-desc {
+            color: #5a677a;
+            transition: color .3s ease;
+        }
+        .medical-card:hover .card-desc {
+            color: rgba(255,255,255,0.86);
+        }
+
+        /* 番号の見え方（明るい写真でも飛ばない） */
+        .medical-card .card-no {
+            transition: color .3s ease;
+        }
+        .medical-card:hover .card-no {
+            color: rgba(255,255,255,0.18) !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- ヘッダー -->
+    <header class="fixed w-full z-50 transition-all duration-300 bg-white/95 backdrop-blur-md shadow-sm">
+        <div class="w-full px-6 md:px-10 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-navy text-white flex items-center justify-center font-en text-xl font-bold shadow-md">H</div>
+                <div>
+                    <h1 class="text-xl font-bold text-navy tracking-tight leading-none">歯科廣瀬醫院</h1>
+                    <p class="text-[10px] text-green font-en font-bold tracking-[0.2em] mt-1">Hirose Dental Clinic</p>
+                </div>
+            </div>
+
+            <!-- 日本語メインのナビゲーション -->
+            <nav class="hidden xl:flex gap-8 text-sm font-bold text-navy items-center">
+                <a href="#" class="hover:text-green transition-colors">ホーム</a>
+                <a href="#" class="hover:text-green transition-colors">クリニック紹介</a>
+                <a href="#" class="hover:text-green transition-colors">診療案内</a>
+                <a href="#" class="hover:text-green transition-colors">アクセス</a>
+                <a href="#" class="btn-stylish py-3 px-8 text-xs shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all">WEB予約</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- メインビジュアル -->
+    <section class="relative h-screen min-h-[600px] w-full overflow-hidden flex items-center">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=2000" class="w-full h-full object-cover" alt="Clinic Interior">
+            <div class="absolute inset-0 bg-navy/40"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-navy/90 via-navy/50 to-transparent"></div>
+        </div>
+
+        <div class="container-wide relative z-10 w-full pl-6 md:pl-20 pt-20">
+            <div class="max-w-3xl">
+                <div class="inline-block bg-green px-4 py-1 mb-6 shadow-lg">
+                    <p class="text-white font-bold text-sm tracking-[0.2em]">丁寧な診療と安心の空間</p>
+                </div>
+                <h2 class="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.2] mb-8 font-serif drop-shadow-lg text-shadow-md">
+                    一人ひとりの<br>
+                    <span class="text-green-light">笑顔のために、</span><br>
+                    丁寧な診療を。
+                </h2>
+                <div class="h-1 w-24 bg-green mb-8"></div>
+                <p class="text-white text-base md:text-lg font-medium mb-10 max-w-xl leading-loose text-shadow-sm">
+                    洗練された空間と最新の技術で、あなたらしい美しさを引き出します。<br>
+                    機能性と美しさを両立させた、上質な歯科医療をご提供いたします。
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#" class="btn-stylish border-none bg-green text-white hover:bg-white hover:text-navy shadow-2xl">WEB予約</a>
+                    <a href="#" class="btn-stylish border-white bg-transparent text-white hover:bg-white hover:text-navy">TEL: 123-456-7890</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute right-0 bottom-0 h-1/2 w-16 bg-white hidden lg:flex flex-col justify-center items-center gap-8 z-20 shadow-xl">
+            <div class="flex-1 w-[1px] bg-navy/20"></div>
+            <p class="vertical-text font-en text-xs tracking-[0.4em] text-navy font-bold">SCROLL</p>
+        </div>
+    </section>
+
+    <!-- News -->
+    <section class="bg-navy py-16 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-full h-full bg-pattern opacity-20"></div>
+
+        <div class="container-wide relative z-10">
+            <div class="flex flex-col lg:flex-row items-center gap-12 border-l-8 border-green pl-8 lg:pl-16">
+                <div class="lg:w-1/4">
+                    <h3 class="text-3xl md:text-4xl font-serif font-bold text-white mb-2">お知らせ</h3>
+                    <p class="text-xs text-green font-en font-bold tracking-widest">NEWS</p>
+                </div>
+                <div class="lg:w-3/4 w-full grid gap-4">
+                    <a href="#" class="flex flex-col md:flex-row items-start md:items-center gap-6 bg-white/5 p-6 border border-white/10 hover:bg-white/10 transition-all group hover:border-green">
+                        <div class="flex items-center gap-4 min-w-max">
+                            <span class="font-en text-lg font-bold text-green">2025.08.20</span>
+                            <span class="text-xs bg-white text-navy px-3 py-1 font-bold">休診</span>
+                        </div>
+                        <p class="text-sm md:text-base text-gray-100 group-hover:text-white font-medium">9月8日、9日の午前中は院内勉強会のため休診いたします。</p>
+                        <span class="ml-auto text-green opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    </a>
+                    <a href="#" class="flex flex-col md:flex-row items-start md:items-center gap-6 bg-white/5 p-6 border border-white/10 hover:bg-white/10 transition-all group hover:border-green">
+                        <div class="flex items-center gap-4 min-w-max">
+                            <span class="font-en text-lg font-bold text-green">2025.08.08</span>
+                            <span class="text-xs bg-white text-navy px-3 py-1 font-bold">休診</span>
+                        </div>
+                        <p class="text-sm md:text-base text-gray-100 group-hover:text-white font-medium">8月11日〜8月15日までお盆の為、休診となります。</p>
+                        <span class="ml-auto text-green opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 診療案内 -->
+    <section class="py-24 bg-light relative">
+        <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white to-light z-0"></div>
+
+        <div class="container-wide relative z-10">
+            <div class="flex justify-between items-end mb-16 px-4">
+                <div>
+                    <span class="text-green font-en font-bold tracking-[0.2em] text-sm block mb-2">Medical Service</span>
+                    <h3 class="text-4xl md:text-5xl font-bold text-navy font-serif">診療案内</h3>
+                </div>
+                <a href="#" class="hidden md:block font-bold text-navy border-b-2 border-navy hover:text-green hover:border-green transition-colors pb-1 text-sm">すべての診療メニューを見る</a>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- 1 -->
+                <a href="#" class="group medical-card relative h-[450px] shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300">
+                    <div class="absolute top-0 right-0 p-6 z-20">
+                        <span class="card-no font-en text-5xl font-bold text-gray-200 group-hover:text-white/20 transition-colors">01</span>
+                    </div>
+                    <div class="h-1/2 img-filter">
+                        <img src="https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="定期検診">
+                    </div>
+                    <div class="card-body h-1/2 p-8 flex flex-col justify-center relative transition-colors duration-300">
+                        <h4 class="card-title text-2xl font-bold mb-2 transition-colors font-serif">定期検診</h4>
+                        <div class="w-10 h-1 bg-green mb-4"></div>
+                        <p class="card-desc text-sm transition-colors font-bold leading-relaxed">
+                            一生自分の歯で過ごすために。<br>プロフェッショナルケア。
+                        </p>
+                        <div class="absolute bottom-0 left-0 w-full h-2 bg-green transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                    </div>
+                </a>
+
+                <!-- 2 -->
+                <a href="#" class="group medical-card relative h-[450px] shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 bg-navy border border-navy">
+                    <div class="absolute top-0 right-0 p-6 z-20">
+                        <span class="card-no font-en text-5xl font-bold text-white/10 group-hover:text-white/20 transition-colors">02</span>
+                    </div>
+                    <div class="h-1/2 img-filter">
+                        <img src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="審美治療">
+                    </div>
+                    <div class="card-body h-1/2 p-8 flex flex-col justify-center relative transition-colors duration-300">
+                        <h4 class="card-title text-2xl font-bold mb-2 transition-colors font-serif">歯周病治療</h4>
+                        <div class="w-10 h-1 bg-green mb-4"></div>
+                        <p class="card-desc text-sm transition-colors font-bold leading-relaxed">
+                            本来の白さを。<br>自信の持てる笑顔へ。
+                        </p>
+                        <div class="absolute bottom-0 left-0 w-full h-2 bg-green transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                    </div>
+                </a>
+
+                <!-- 3 -->
+                <a href="#" class="group medical-card relative h-[450px] shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300">
+                    <div class="absolute top-0 right-0 p-6 z-20">
+                        <span class="card-no font-en text-5xl font-bold text-gray-200 group-hover:text-white/20 transition-colors">03</span>
+                    </div>
+                    <div class="h-1/2 img-filter">
+                        <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="小児歯科">
+                    </div>
+                    <div class="card-body h-1/2 p-8 flex flex-col justify-center relative transition-colors duration-300">
+                        <h4 class="card-title text-2xl font-bold mb-2 transition-colors font-serif">小児歯科</h4>
+                        <div class="w-10 h-1 bg-green mb-4"></div>
+                        <p class="card-desc text-sm transition-colors font-bold leading-relaxed">
+                            お子さまの成長に合わせて。<br>無理のない治療。
+                        </p>
+                        <div class="absolute bottom-0 left-0 w-full h-2 bg-green transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                    </div>
+                </a>
+
+                <!-- 4 -->
+                <a href="#" class="group medical-card relative h-[450px] shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 bg-navy border border-navy">
+                    <div class="absolute top-0 right-0 p-6 z-20">
+                        <span class="card-no font-en text-5xl font-bold text-white/10 group-hover:text-white/20 transition-colors">04</span>
+                    </div>
+                    <div class="h-1/2 img-filter">
+                        <img src="https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="インプラント">
+                    </div>
+                     <div class="card-body h-1/2 p-8 flex flex-col justify-center relative transition-colors duration-300">
+                        <h4 class="card-title text-2xl font-bold mb-2 transition-colors font-serif">インプラント</h4>
+                        <div class="w-10 h-1 bg-green mb-4"></div>
+                        <p class="card-desc text-sm transition-colors font-bold leading-relaxed">
+                            失った歯を取り戻す。<br>噛める喜びを再び。
+                        </p>
+                        <div class="absolute bottom-0 left-0 w-full h-2 bg-green transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 特徴 -->
+    <section class="py-24 bg-green-light relative overflow-hidden">
+        <div class="container-wide relative z-10">
+            <div class="flex flex-col lg:flex-row gap-0 shadow-2xl">
+                <div class="lg:w-1/2 relative h-[500px] lg:h-auto overflow-hidden group">
+                    <img src="https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?auto=format&fit=crop&q=80&w=1000" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="院内">
+                    <div class="absolute inset-0 bg-navy/40 transition-all"></div>
+                    <div class="absolute bottom-0 left-0 bg-green text-white p-6">
+                        <p class="font-en font-bold text-2xl tracking-widest">High Quality</p>
+                        <p class="text-sm mt-1">安心安全の医療品質</p>
+                    </div>
+                </div>
+
+                <div class="lg:w-1/2 bg-white p-12 lg:p-20 flex flex-col justify-center border-t-8 border-navy">
+                    <span class="text-green font-en font-bold tracking-[0.2em] text-sm block mb-4">OUR FEATURES</span>
+                    <h3 class="text-3xl md:text-4xl font-bold text-navy mb-10 leading-tight font-serif">
+                        選ばれる理由、<br>
+                        <span class="relative inline-block z-10">
+                            3つのこだわり。
+                            <span class="absolute bottom-2 left-0 w-full h-3 bg-green/30 -z-10"></span>
+                        </span>
+                    </h3>
+
+                    <div class="space-y-8">
+                        <div class="flex items-start gap-6 group">
+                            <span class="font-en text-2xl font-bold text-white bg-navy w-12 h-12 flex items-center justify-center flex-shrink-0 shadow-md group-hover:bg-green transition-colors">01</span>
+                            <div>
+                                <h4 class="text-lg font-bold text-navy mb-2 font-serif">丁寧なカウンセリング</h4>
+                                <p class="text-sm text-gray-600 leading-loose font-medium">専用ルームで、お悩みやご要望をじっくりお伺いします。不安を解消してから治療へ進みます。</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-6 group">
+                            <span class="font-en text-2xl font-bold text-white bg-navy w-12 h-12 flex items-center justify-center flex-shrink-0 shadow-md group-hover:bg-green transition-colors">02</span>
+                            <div>
+                                <h4 class="text-lg font-bold text-navy mb-2 font-serif">洗練された癒しの空間</h4>
+                                <p class="text-sm text-gray-600 leading-loose font-medium">インテリアや照明にこだわり、リラックスして過ごせる空間づくりを徹底しています。</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-6 group">
+                            <span class="font-en text-2xl font-bold text-white bg-navy w-12 h-12 flex items-center justify-center flex-shrink-0 shadow-md group-hover:bg-green transition-colors">03</span>
+                            <div>
+                                <h4 class="text-lg font-bold text-navy mb-2 font-serif">徹底した感染症対策</h4>
+                                <p class="text-sm text-gray-600 leading-loose font-medium">世界基準の滅菌器（クラスB）やディスポーザブル製品の使用で、見えない安心を提供します。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 院長挨拶 -->
+    <section class="py-24 bg-navy relative text-white">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+        <div class="absolute right-0 bottom-0 w-1/3 h-full bg-gradient-to-l from-green/20 to-transparent"></div>
+
+        <div class="container-wide relative z-10 max-w-5xl mx-auto">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-5/12 relative">
+                    <div class="absolute top-4 left-4 w-full h-full border-2 border-green z-0"></div>
+                    <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=800" class="w-full relative z-10 shadow-2xl grayscale contrast-125" alt="院長">
+                </div>
+                <div class="md:w-7/12">
+                    <p class="font-en text-green font-bold tracking-[0.2em] text-sm mb-4">GREETING</p>
+                    <h3 class="text-3xl font-bold mb-8 leading-relaxed font-serif">
+                        皆様に愛される<br>歯科医院を目指して。
+                    </h3>
+                    <p class="text-sm text-gray-300 leading-loose mb-10 font-medium">
+                        初めまして。カネコデンタルオフィス院長の金子一平と申します。<br><br>
+                        歯科治療には見た目の美しさ、機能性、耐久性が求められます。それらの実現のために高いレベルの歯科医療をご提供すべく、医院の設備にも力を入れております。
+                    </p>
+                    <div class="text-right border-t border-white/20 pt-6 flex justify-end items-baseline gap-4">
+                        <p class="text-sm font-bold text-green">院長</p>
+                        <p class="text-3xl font-bold tracking-widest font-serif">金子 一平</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- アクセス & フッター -->
+    <footer class="bg-white pt-24 pb-8">
+        <div class="container-wide">
+            <div class="grid lg:grid-cols-2 gap-12 mb-20">
+                <div>
+                    <div class="flex items-center gap-4 mb-8">
+                        <h3 class="font-en text-3xl font-bold text-navy tracking-widest">ACCESS</h3>
+                        <div class="flex-1 h-[1px] bg-gray-300"></div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-8 mb-8">
+                        <div>
+                            <p class="text-lg font-bold text-navy mb-1">歯科廣瀬醫院</p>
+                            <p class="text-sm text-gray-600 font-bold mb-4">〒790-0012 愛媛県松山市湊町4丁目2-3</p>
+                            <div class="space-y-2">
+                                <a href="#" class="btn-stylish py-3 px-0 w-full text-center bg-navy border-navy hover:bg-green hover:border-green">Google Maps</a>
+                                <a href="#" class="btn-stylish py-3 px-0 w-full text-center bg-white text-navy border-navy hover:bg-navy hover:text-white">TEL: 123-456-7890</a>
+                            </div>
+                        </div>
+                        <div class="flex-1 h-64 bg-gray-100 border border-gray-200">
+                            <iframe width="100%" height="100%" frameborder="0" style="border:0" src="https://maps.google.com/maps?q=愛媛県松山市湊町4丁目2-3&t=&z=15&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex items-center gap-4 mb-8">
+                        <h3 class="font-en text-3xl font-bold text-navy tracking-widest">SCHEDULE</h3>
+                        <div class="flex-1 h-[1px] bg-gray-300"></div>
+                    </div>
+                    <div class="bg-light p-8 border-t-4 border-green">
+                        <table class="w-full text-center text-sm font-bold">
+                            <thead>
+                                <tr class="font-en text-navy border-b-2 border-navy/20">
+                                    <th class="py-3 text-left">Time</th>
+                                    <th class="py-3">Mon</th>
+                                    <th class="py-3">Tue</th>
+                                    <th class="py-3">Wed</th>
+                                    <th class="py-3">Thu</th>
+                                    <th class="py-3">Fri</th>
+                                    <th class="py-3">Sat</th>
+                                    <th class="py-3 text-red-500">Sun</th>
+                                </tr>
+                            </thead>
+                            <tbody class="font-en text-navy">
+                                <tr class="border-b border-gray-200">
+                                    <td class="py-4 text-left">09:00 - 13:00</td>
+                                    <td>●</td><td>●</td><td>●</td><td>●</td><td>●</td><td>●</td>
+                                    <td class="text-gray-400">/</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 text-left">14:00 - 18:00</td>
+                                    <td>●</td><td>●</td><td>●</td><td>●</td><td>●</td><td class="text-green text-xs">17:00</td>
+                                    <td class="text-gray-400">/</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="mt-4 text-xs text-gray-500 text-right tracking-widest">※ 最終受付は診療終了の30分前までとなります。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t-2 border-navy pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] text-navy font-en font-bold tracking-widest uppercase">
+                <div class="flex items-center gap-2 mb-4 md:mb-0">
+                    <div class="w-6 h-6 bg-navy text-white flex items-center justify-center">H</div>
+                    <p>&copy; 2026 Hirose Dental Clinic.</p>
+                </div>
+                <div class="flex gap-8">
+                    <a href="#" class="hover:text-green transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-green transition-colors">Instagram</a>
+                    <a href="#" class="hover:text-green transition-colors">Line Official</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
